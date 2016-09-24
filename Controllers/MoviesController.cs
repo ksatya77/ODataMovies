@@ -19,6 +19,8 @@ namespace ODataMovies.Controllers
         //return m_service.Movies;
         //}
 
+            public MoviesController() { }
+
         [EnableQuery]
         public IList<Movie> Get()
         {

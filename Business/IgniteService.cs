@@ -14,12 +14,9 @@ namespace ODataMovies.Business
     public class IgniteService
     {
 
+        private static ICache<int, Movie> cache;
+
         public IgniteService()
-        {
-
-        }
-
-        public List<Movie> GetMovies()
         {
             var cfg = new IgniteConfiguration
             {
@@ -29,7 +26,7 @@ namespace ODataMovies.Business
             };
             Ignition.ClientMode = true;
             var ignite = Ignition.Start(cfg);
-            var cache = ignite.GetOrCreateCache<int, Movie>(new CacheConfiguration
+            cache = ignite.GetOrCreateCache<int, Movie>(new CacheConfiguration
             {
                 Name = "myMusicCache",
                 QueryEntities = new[]
@@ -38,6 +35,12 @@ namespace ODataMovies.Business
 
                     }
             });
+
+        }
+
+        public List<Movie> GetMovies()
+        {
+            
             List<Movie> movies = new List<Movie>();
             IQueryable<ICacheEntry<int, Movie>> qry =
                 cache.AsCacheQueryable().Where(m => m.Key == 1);
